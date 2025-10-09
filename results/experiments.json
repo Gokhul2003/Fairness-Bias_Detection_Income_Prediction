@@ -1,0 +1,296 @@
+[
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  },
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  },
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  },
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  },
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  },
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  },
+  {
+    "baseline": "LogisticRegression",
+    "metrics": {
+      "LogisticRegression": {
+        "accuracy": 0.8655445142973027,
+        "f1": 0.0
+      },
+      "RandomForest": {
+        "accuracy": 0.8408030825390387,
+        "f1": 0.09038238702201622
+      },
+      "GradientBoosting": {
+        "accuracy": 0.8650375177448794,
+        "f1": 0.0
+      },
+      "LightGBM": {
+        "accuracy": 0.8654431149868181,
+        "f1": 0.010439970171513798
+      }
+    },
+    "fairness": {
+      "overall": {
+        "accuracy": 0.8655445142973027,
+        "demographic_parity_difference": 0.0,
+        "equalized_odds_difference": 0.0
+      },
+      "by_group": {
+        "selection_rate": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "fpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        },
+        "tpr": {
+          "Female": 0.0,
+          "Male": 0.0
+        }
+      }
+    }
+  }
+]
