@@ -1,105 +1,78 @@
+# app.py
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
+from data_loader import load_adult_data, preprocess_data
+from fairness_metrics import train_models, compute_bias
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
-from src.data_loader import load_dataset
-from src.preprocessing import preprocess
-from src.models import get_models, train_and_eval
-from src.fairness import fairness_summary, confusion_matrices
-from src.mitigation import run_exponentiated_gradient
-from src.utils import save_experiment
+st.set_page_config(page_title="Fairness Auditing in Income Prediction", layout="wide")
+st.title("💼 Fairness Auditing and Bias Detection in Income Prediction")
+st.write("This app detects and analyzes bias across multiple attributes like gender, race, age, education, and more using ML models.")
 
-st.set_page_config(layout='wide', page_title='Fairness Audit - Income Prediction')
-st.title('Fairness Auditing & Bias Mitigation in Income Prediction')
-
-# Sidebar controls
-st.sidebar.header('Controls')
-uploaded = st.sidebar.file_uploader('Upload CSV (optional)', type=['csv'])
-
-if uploaded is not None:
-    df = pd.read_csv(uploaded)
-else:
-    df = load_dataset()
-
-st.sidebar.write('Rows: {} Columns: {}'.format(df.shape[0], df.shape[1]))
-st.write('### Dataset preview')
+# Load & preprocess
+df = load_adult_data()
+st.success(f"✅ Adult dataset loaded: {df.shape}")
+st.subheader("📋 Dataset Preview")
 st.dataframe(df.head())
 
-if st.button('Run Full Pipeline'):
-    # Preprocessing
-    X_train, X_test, y_train, y_test, prot_train, prot_test, preproc, prot_col, target_col = preprocess(df)
-    st.success(f'Preprocessing completed. Detected protected attribute: {prot_col} and target: {target_col}')
+if st.button("▶️ Start Processing and Analysis"):
+
+    # Protected attributes
+    protected_attributes = ["age", "education", "race", "sex", "marital_status", "occupation"]
+    st.write(f"**🔹 Detected Protected Attributes:** {', '.join(protected_attributes)}")
     
+    # Preprocess & split
+    X_train, X_test, y_train, y_test = preprocess_data(df)
+
     # Train models
-    models = get_models()
-    results = train_and_eval(models, X_train, y_train, X_test, y_test)
-    
-    st.subheader('Model Results')
-    for mname, res in results.items():
-        st.write(f"{mname}: Accuracy={res['accuracy']:.3f}, F1={res['f1']:.3f}, Precision={res['precision']:.3f}, Recall={res['recall']:.3f}")
-    
-    # Baseline fairness using LogisticRegression if present
-    baseline = 'LogisticRegression' if 'LogisticRegression' in results else list(results.keys())[0]
-    preds = results[baseline]['preds']
-    fairness = fairness_summary(y_test, preds, prot_test)
-    
-    # ---- Display Fairness Summary ----
-    st.subheader("🔍 Fairness Summary")
-    st.json(fairness)
+    models = train_models(X_train, y_train)
 
-    # ---- Plot Group-wise Fairness Metrics (Improved Style) ----
-    st.subheader("📊 Group-wise Fairness Visualization")
-    group_df = pd.DataFrame(fairness['by_group']).T  # transpose for plotting
+    # Tab 1: Model performance
+    tabs = st.tabs(["📈 Model Performance", "⚖️ Fairness Analysis", "📊 Bias Visualization"])
+    with tabs[0]:
+        st.subheader("📈 Model Performance")
+        for name, model in models.items():
+            y_pred = model.predict(X_test)
+            st.markdown(f"""
+            **{name}:**
+            - Accuracy = {accuracy_score(y_test, y_pred):.3f}
+            - F1 Score = {f1_score(y_test, y_pred):.3f}
+            - Precision = {precision_score(y_test, y_pred):.3f}
+            - Recall = {recall_score(y_test, y_pred):.3f}
+            """)
 
-    for metric in group_df.index:
-        st.write(f"### {metric.upper()} by Group")
-        fig, ax = plt.subplots(figsize=(6, 3))
-        sns.barplot(x=group_df.columns, y=group_df.loc[metric].values, palette="pastel", ax=ax)
+    # Tab 2: Fairness Analysis
+    with tabs[1]:
+        st.subheader("⚖️ Fairness Summary")
+        st.info("""
+        **DP% → Measures who gets selected more. Higher % = stronger bias.**  
+        **EO% → Measures accuracy gap across groups. Higher % = stronger bias.**
+        """)
+        bias_df = compute_bias(models, X_test, y_test, protected_attributes)
+        st.dataframe(bias_df[["Attribute","DP%","EO%","Bias Score","Explanation"]])
 
-        # Add value labels above bars
-        for i, v in enumerate(group_df.loc[metric].values):
-            ax.text(i, v + (0.01 if v >= 0 else -0.01), f"{v:.2f}", ha='center', va='bottom', fontsize=10, color='black')
+        # Overall bias rating
+        avg_bias = bias_df["Bias Score"].abs().mean()
+        if avg_bias < 5:
+            st.success("✅ Low Bias (Fair Model)")
+        elif avg_bias < 15:
+            st.warning("⚠️ Moderate Bias")
+        else:
+            st.error("❌ High Bias (Unfair Model Detected)")
 
-        # Aesthetic improvements
-        ax.set_xlabel('Group', fontsize=10)
-        ax.set_ylabel(metric.upper(), fontsize=10)
-        ax.set_ylim(min(0, group_df.loc[metric].min() - 0.05), group_df.loc[metric].max() + 0.05)
-        sns.despine(ax=ax)
-        plt.tight_layout()
+    # Tab 3: Bias Visualization
+    with tabs[2]:
+        st.subheader("📊 Interactive Bias Visualization Across Attributes")
+        bias_melt = bias_df.melt(id_vars=["Attribute","Explanation"], value_vars=["DP%","EO%"],
+                                 var_name="Metric", value_name="Bias")
+        fig = px.bar(
+            bias_melt, x="Attribute", y="Bias", color="Metric", barmode="group",
+            text="Bias", hover_data=["Explanation"]
+        )
+        fig.update_layout(title="Bias Across Protected Attributes", yaxis_title="Bias (%)", xaxis_title="Attribute")
+        st.plotly_chart(fig, use_container_width=True)
 
-        st.pyplot(fig)
-        plt.close(fig)
-
-    
-    # ---- Fairness Risk Indicator ----
-    st.write("### 🚦 Fairness Risk Indicator")
-    bias_score = abs(fairness['overall']['demographic_parity_difference'])
-    if bias_score < 0.05:
-        st.success("✅ Low Bias (Fair Model)")
-    elif bias_score < 0.15:
-        st.warning("⚠️ Moderate Bias (Needs Attention)")
-    else:
-        st.error("🚨 High Bias (Unfair Predictions)")
-
-    # Confusion matrices by group
-    st.subheader('Confusion Matrices by Group (Baseline)')
-    st.json(confusion_matrices(y_test, preds, prot_test))
-
-    # Save experiment summary
-    summary = {
-        'baseline': baseline,
-        'metrics': {k: {'accuracy': v['accuracy'], 'f1': v['f1']} for k, v in results.items()},
-        'fairness': fairness
-    }
-    save_experiment(summary)
-
-    # Mitigation step
-    st.subheader('In-processing Mitigation (ExponentiatedGradient)')
-    if st.button('Run ExponentiatedGradient - DemographicParity'):
-        mitig = run_exponentiated_gradient(X_train, y_train, prot_train, constraint='demographic_parity', eps=0.01)
-        mitig_preds = mitig.predict(X_test)
-        mitig_fair = fairness_summary(y_test, mitig_preds, prot_test)
-        st.write('Fairness after mitigation:')
-        st.json(mitig_fair)
+        # Highlight worst attribute
+        worst_attr = bias_df.loc[bias_df["Bias Score"].idxmax(), "Attribute"]
+        st.info(f"📌 Attribute with **highest detected bias**: `{worst_attr}`")
