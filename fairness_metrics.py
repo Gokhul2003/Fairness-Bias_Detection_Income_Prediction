@@ -1,13 +1,15 @@
 # fairness_metrics.py
 from sklearn.ensemble import RandomForestClassifier
 from lightgbm import LGBMClassifier
+from sklearn.linear_model import LogisticRegression
 from fairlearn.metrics import demographic_parity_difference, equalized_odds_difference
 import pandas as pd
 
 def train_models(X_train, y_train):
     models = {
         "RandomForest": RandomForestClassifier(n_estimators=100, random_state=42),
-        "LightGBM": LGBMClassifier(random_state=42)
+        "LightGBM": LGBMClassifier(random_state=42),
+        "LogisticRegression": LogisticRegression(max_iter=1000, random_state=42)
     }
     for name, model in models.items():
         model.fit(X_train, y_train)
@@ -20,6 +22,7 @@ def compute_bias(models, X_test, y_test, protected_attributes):
     
     for attr in protected_attributes:
         sensitive_test = X_test_df[attr]
+        # Using RandomForest as reference model for bias calculation
         y_pred = models["RandomForest"].predict(X_test)
         
         dp_diff = demographic_parity_difference(y_test_series, y_pred, sensitive_features=sensitive_test)
