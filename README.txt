@@ -113,5 +113,3 @@ Contact / Feedback:
 Author:Gokhul Kooranchi 
 Email: thegokhul.kooranchi@gmail.com 
 GitHub: https://github.com/Gokhul2003  
-
-Optional: Add a screenshot of the dashboard for better clarity.
